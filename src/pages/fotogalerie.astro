@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Fotogalerie';
+const description = 'Podívejte se na naše akce — firemní večírky, svatební hostiny, rodinné oslavy i stánkový prodej. Fotografie z práce Catering z ráje.';
+---
+
+<Layout title={title} description={description}>
+
+  <section class="pt-20 lg:pt-24 bg-stone-900 text-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 lg:py-24">
+      <h1 class="text-4xl sm:text-5xl font-extrabold mb-4">Fotogalerie</h1>
+      <p class="text-stone-200 text-lg max-w-2xl">Nahlédněte do naší práce. Každá akce je pro nás jedinečná a snažíme se, aby jídlo nejen chutnalo, ale i vypadalo skvěle.</p>
+    </div>
+  </section>
+
+  <section class="py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+
+      <!-- Placeholder galerie — obrázky doplníte -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div class="aspect-square bg-stone-100 rounded-xl overflow-hidden">
+            <img
+              src={`/images/galerie/foto-${i + 1}.jpg`}
+              alt={`Galerie ${i + 1}`}
+              class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+              onerror="this.parentElement.classList.add('hidden')"
+            />
+          </div>
+        ))}
+      </div>
+
+      <p class="text-center text-stone-400 text-sm mt-10">Další fotografie najdete na našem <a href="https://www.facebook.com/cateringzraje" target="_blank" rel="noopener" class="text-brand-500 hover:underline">Facebooku</a> a <a href="https://www.instagram.com/cateringzraje" target="_blank" rel="noopener" class="text-brand-500 hover:underline">Instagramu</a>.</p>
+    </div>
+  </section>
+
+</Layout>

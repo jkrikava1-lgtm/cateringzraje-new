@@ -1,0 +1,288 @@
+---
+import '../styles/global.css';
+import site from '../data/site.json';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title,
+  description = site.description,
+  ogImage = `${site.url}/images/og-image.jpg`
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, site.url);
+const fullTitle = title === site.name ? site.name : `${title} | ${site.name}`;
+---
+
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload" as="style"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet" media="print" onload="this.media='all'"
+    />
+    <title>{fullTitle}</title>
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="cs_CZ" />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FoodEstablishment",
+      "name": site.name,
+      "description": site.description,
+      "url": site.url,
+      "telephone": site.phone,
+      "email": site.email,
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Náměstí míru 5",
+        "addressLocality": "Sobotka",
+        "postalCode": "507 43",
+        "addressCountry": "CZ"
+      },
+      "servesCuisine": "Czech",
+      "priceRange": "$$",
+      "image": ogImage,
+      "sameAs": [site.facebook, site.instagram]
+    })} />
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+    </script>
+  </head>
+  <body class="antialiased">
+
+    <!-- Cookie banner -->
+    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-[100] bg-white border-t border-stone-200 shadow-lg p-4 sm:p-6 hidden">
+      <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <p class="text-sm text-stone-600 flex-1">
+          Tento web používá cookies pro měření návštěvnosti (Google Analytics).
+        </p>
+        <div class="flex gap-3 flex-shrink-0">
+          <button id="cookie-reject" class="px-4 py-2 text-sm font-semibold text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors">Odmítnout</button>
+          <button id="cookie-accept" class="px-4 py-2 text-sm font-semibold text-white bg-brand-500 hover:bg-brand-600 rounded-lg transition-colors">Přijmout</button>
+        </div>
+      </div>
+    </div>
+
+    <script is:inline>
+      (function() {
+        var consent = localStorage.getItem('cookie-consent');
+        if (consent === 'accepted') {
+          loadGA();
+        } else if (consent !== 'rejected') {
+          document.getElementById('cookie-banner').classList.remove('hidden');
+        }
+        document.getElementById('cookie-accept')?.addEventListener('click', function() {
+          localStorage.setItem('cookie-consent', 'accepted');
+          document.getElementById('cookie-banner').classList.add('hidden');
+          loadGA();
+        });
+        document.getElementById('cookie-reject')?.addEventListener('click', function() {
+          localStorage.setItem('cookie-consent', 'rejected');
+          document.getElementById('cookie-banner').classList.add('hidden');
+        });
+        function loadGA() {
+          var s = document.createElement('script');
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-PLACEHOLDER';
+          s.async = true;
+          document.head.appendChild(s);
+          gtag('js', new Date());
+          gtag('config', 'G-PLACEHOLDER');
+        }
+      })();
+    </script>
+
+    <!-- Header -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-stone-200 transition-shadow duration-300">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+
+        <!-- Mobile -->
+        <div class="flex items-center justify-between h-16 lg:hidden">
+          <a href="/" class="flex items-center gap-2">
+            <img src="/logo.png" alt={site.name} class="h-10 w-auto" />
+          </a>
+          <div class="flex items-center gap-2">
+            <a href="/poptavka/" class="inline-flex items-center px-3 py-2 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold rounded-lg transition-colors">
+              Poptávka
+            </a>
+            <button id="mobile-menu-toggle" class="w-9 h-9 flex items-center justify-center text-stone-600 hover:text-brand-500 rounded-md" aria-label="Otevřít menu" aria-expanded="false">
+              <svg id="icon-hamburger" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+              </svg>
+              <svg id="icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Desktop -->
+        <div class="hidden lg:flex items-center justify-between h-20">
+          <a href="/" class="flex items-center gap-3 flex-shrink-0">
+            <img src="/logo.png" alt={site.name} class="h-12 w-auto" />
+          </a>
+          <nav class="flex items-center gap-1">
+            <div class="relative group" data-nav-group>
+              <button class="flex items-center gap-1 px-4 py-2 text-sm font-medium text-stone-700 hover:text-brand-500 rounded-lg hover:bg-stone-50 transition-colors">
+                Služby
+                <svg class="w-3.5 h-3.5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              <div data-nav-dropdown style="opacity:0;visibility:hidden;pointer-events:none;" class="absolute top-full left-0 mt-1 w-52 bg-white rounded-xl shadow-lg border border-stone-100 transition-opacity duration-150 py-2 z-50">
+                <a href="/firemni-akce/" class="block px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-brand-500">Firemní akce</a>
+                <a href="/rodinne-oslavy/" class="block px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-brand-500">Rodinné oslavy</a>
+                <a href="/svatebni-hostiny/" class="block px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-brand-500">Svatební hostiny</a>
+                <a href="/stankovy-prodej/" class="block px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-brand-500">Stánkový prodej</a>
+              </div>
+            </div>
+            <a href="/fotogalerie/" class="px-4 py-2 text-sm font-medium text-stone-700 hover:text-brand-500 rounded-lg hover:bg-stone-50 transition-colors">Fotogalerie</a>
+            <a href="/kontakt/" class="px-4 py-2 text-sm font-medium text-stone-700 hover:text-brand-500 rounded-lg hover:bg-stone-50 transition-colors">Kontakt</a>
+            <a href="/poptavka/" class="ml-2 inline-flex items-center px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm">
+              Nezávazná poptávka
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="hidden lg:hidden border-t border-stone-100 bg-white">
+        <nav class="max-w-6xl mx-auto px-4 py-3 space-y-1">
+          <a href="/firemni-akce/" class="block px-3 py-2.5 text-sm font-medium text-stone-700 hover:text-brand-500 hover:bg-stone-50 rounded-lg">Firemní akce</a>
+          <a href="/rodinne-oslavy/" class="block px-3 py-2.5 text-sm font-medium text-stone-700 hover:text-brand-500 hover:bg-stone-50 rounded-lg">Rodinné oslavy</a>
+          <a href="/svatebni-hostiny/" class="block px-3 py-2.5 text-sm font-medium text-stone-700 hover:text-brand-500 hover:bg-stone-50 rounded-lg">Svatební hostiny</a>
+          <a href="/stankovy-prodej/" class="block px-3 py-2.5 text-sm font-medium text-stone-700 hover:text-brand-500 hover:bg-stone-50 rounded-lg">Stánkový prodej</a>
+          <a href="/fotogalerie/" class="block px-3 py-2.5 text-sm font-medium text-stone-700 hover:text-brand-500 hover:bg-stone-50 rounded-lg">Fotogalerie</a>
+          <a href="/kontakt/" class="block px-3 py-2.5 text-sm font-medium text-stone-700 hover:text-brand-500 hover:bg-stone-50 rounded-lg">Kontakt</a>
+          <div class="pt-2 pb-1">
+            <a href="/poptavka/" class="block w-full text-center px-4 py-3 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold rounded-lg transition-colors">
+              Poslat poptávku
+            </a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-white">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-14">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
+
+          <div>
+            <img src="/logo-white.png" alt={site.name} class="h-10 w-auto mb-4" />
+            <p class="text-sm text-stone-300 leading-relaxed mb-5">{site.footer_desc}</p>
+            <div class="flex gap-3">
+              <a href={site.facebook} target="_blank" rel="noopener" aria-label="Facebook" class="w-9 h-9 flex items-center justify-center rounded-full bg-stone-800 hover:bg-brand-500 transition-colors">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+              <a href={site.instagram} target="_blank" rel="noopener" aria-label="Instagram" class="w-9 h-9 flex items-center justify-center rounded-full bg-stone-800 hover:bg-brand-500 transition-colors">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Služby</h4>
+            <ul class="space-y-2 text-sm text-stone-300">
+              <li><a href="/firemni-akce/" class="hover:text-white transition-colors">Firemní akce</a></li>
+              <li><a href="/rodinne-oslavy/" class="hover:text-white transition-colors">Rodinné oslavy</a></li>
+              <li><a href="/svatebni-hostiny/" class="hover:text-white transition-colors">Svatební hostiny</a></li>
+              <li><a href="/stankovy-prodej/" class="hover:text-white transition-colors">Stánkový prodej</a></li>
+              <li><a href="/fotogalerie/" class="hover:text-white transition-colors">Fotogalerie</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Kontakt</h4>
+            <ul class="space-y-3 text-sm text-stone-300">
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-brand-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span>{site.address_short}</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-brand-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                </svg>
+                <a href={site.phone_href} class="hover:text-white transition-colors">{site.phone}</a>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-brand-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <a href={`mailto:${site.email}`} class="hover:text-white transition-colors">{site.email}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pt-8 border-t border-stone-800 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-stone-400">
+          <p>{site.footer_copyright}</p>
+          <p>{site.footer_made_in}</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const toggle = document.getElementById('mobile-menu-toggle');
+      const menu = document.getElementById('mobile-menu');
+      const iconH = document.getElementById('icon-hamburger');
+      const iconC = document.getElementById('icon-close');
+
+      toggle?.addEventListener('click', () => {
+        const open = !menu?.classList.contains('hidden');
+        menu?.classList.toggle('hidden');
+        iconH?.classList.toggle('hidden', !open);
+        iconC?.classList.toggle('hidden', open);
+        toggle.setAttribute('aria-expanded', String(!open));
+      });
+
+      const header = document.getElementById('header');
+      window.addEventListener('scroll', () => {
+        header?.classList.toggle('shadow-md', window.scrollY > 10);
+      });
+
+      document.querySelectorAll('[data-nav-group]').forEach(group => {
+        const dd = group.querySelector('[data-nav-dropdown]') as HTMLElement | null;
+        if (!dd) return;
+        let t: ReturnType<typeof setTimeout>;
+        const show = () => { clearTimeout(t); dd.style.opacity='1'; dd.style.visibility='visible'; dd.style.pointerEvents='auto'; };
+        const hide = () => { t = setTimeout(() => { dd.style.opacity='0'; dd.style.visibility='hidden'; dd.style.pointerEvents='none'; }, 150); };
+        group.addEventListener('mouseenter', show);
+        group.addEventListener('mouseleave', hide);
+        dd.addEventListener('mouseenter', show);
+        dd.addEventListener('mouseleave', hide);
+      });
+    </script>
+  </body>
+</html>

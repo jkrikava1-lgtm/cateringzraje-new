@@ -1,0 +1,87 @@
+---
+import Layout from '../layouts/Layout.astro';
+import site from '../data/site.json';
+
+const title = 'Stánkový prodej';
+const description = 'Šťavnatá kýta na grilu přímo ze stánku. Autentický zážitek z grilování pro venkovní akce, festivaly a open-air události.';
+---
+
+<Layout title={title} description={description}>
+
+  <section class="pt-20 lg:pt-24 bg-stone-900 text-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-20 lg:py-28">
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-500/20 border border-brand-400/30 text-brand-300 text-xs font-semibold rounded-full mb-5 uppercase tracking-wider">
+          Stánkový prodej
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-extrabold mb-5 leading-tight">
+          Kýta na grilu <span class="text-brand-400">přímo před vámi</span>
+        </h1>
+        <p class="text-stone-200 text-lg leading-relaxed mb-8">
+          Plánujete událost pod širým nebem a hledáte způsob, jak hosty zaujmout? Naše specialita — šťavnatá kýta na grilu — přinese vašemu eventu jedinečnou atmosféru a nezapomenutelnou chuť.
+        </p>
+        <a href="/poptavka/" class="inline-flex items-center px-7 py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition-colors shadow-lg">
+          Nezávazná poptávka
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <h2 class="text-3xl font-extrabold text-stone-900 mb-6">Autentický zážitek z grilování</h2>
+          <p class="text-stone-600 leading-relaxed mb-5">
+            Nabízíme servírování přímo ze stánku, kde kýtu připravujeme před zraky vašich hostů. Porce masa podáváme s čerstvým pečivem a domácími omáčkami, které perfektně doplní chuť grilovaného masa.
+          </p>
+          <p class="text-stone-600 leading-relaxed mb-8">
+            Vše je čerstvé a pečlivě připravené, abyste si užili autentický zážitek z grilování. Zaručujeme, že s námi bude vaše akce opravdu chutným zážitkem!
+          </p>
+          <ul class="space-y-3">
+            {[
+              'Šťavnatá kýta grilovaná přímo na místě',
+              'Čerstvé pečivo a domácí omáčky',
+              'Vhodné pro festivaly, slavnosti a open-air akce',
+              'Vizuální atrakce pro hosty',
+              'Flexibilní kapacita podle velikosti akce',
+            ].map(item => (
+              <li class="flex items-center gap-3 text-stone-700">
+                <svg class="w-5 h-5 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <img
+            src="/images/stankovy-prodej.jpg"
+            alt="Stánkový prodej – grilování kýty"
+            class="w-full rounded-2xl shadow-xl aspect-[4/3] object-cover"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 bg-stone-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-stone-900 mb-4">Chcete kýtu na vaší akci?</h2>
+      <p class="text-stone-600 mb-8 max-w-lg mx-auto">Napište nám a domluvíme se na detailech vaší venkovní akce.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/poptavka/" class="inline-flex items-center justify-center px-7 py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition-colors shadow">
+          Odeslat poptávku
+        </a>
+        <a href={`tel:${site.phone.replace(/\s/g, '')}`} class="inline-flex items-center justify-center px-7 py-3.5 bg-white hover:bg-stone-50 border border-stone-200 text-stone-800 font-semibold rounded-xl transition-colors">
+          {site.phone}
+        </a>
+      </div>
+    </div>
+  </section>
+
+</Layout>
