@@ -11,10 +11,9 @@ import site from '../data/site.json';
       <img
         src="/images/hero.webp"
         alt="Catering z ráje – příprava jídla"
-        class="w-full h-full object-contain opacity-95"
+        class="w-full h-full object-contain opacity-95 hero-image-mask"
         fetchpriority="high"
       />
-      <div class="absolute inset-0 bg-gradient-to-r from-stone-900 via-transparent to-stone-900"></div>
       <div class="absolute inset-0 bg-gradient-to-b from-stone-900/20 via-transparent to-stone-900/40"></div>
     </div>
     <div class="relative w-full px-6 sm:px-10 lg:px-16 py-20 lg:py-28">
@@ -219,5 +218,21 @@ import site from '../data/site.json';
       </div>
     </div>
   </section>
+
+
+<style>
+  .hero-image-mask {
+    mask-image: radial-gradient(ellipse 90% 80% at center, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 80% at center, black 30%, transparent 80%);
+  }
+  @media (min-width: 640px) {
+    .hero-image-mask {
+      mask-image: radial-gradient(ellipse 85% 75% at center, black 25%, transparent 75%), linear-gradient(to right, transparent, black 15%, black 85%, transparent), linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+      mask-composite: intersect;
+      -webkit-mask-image: radial-gradient(ellipse 85% 75% at center, black 25%, transparent 75%), linear-gradient(to right, transparent, black 15%, black 85%, transparent), linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+      -webkit-mask-composite: source-in;
+    }
+  }
+</style>
 
 </Layout>
