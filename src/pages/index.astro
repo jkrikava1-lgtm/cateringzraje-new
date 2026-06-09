@@ -222,16 +222,8 @@ import site from '../data/site.json';
 
 <style>
   .hero-image-mask {
-    mask-image: radial-gradient(ellipse 90% 80% at center, black 30%, transparent 80%);
-    -webkit-mask-image: radial-gradient(ellipse 90% 80% at center, black 30%, transparent 80%);
-  }
-  @media (min-width: 640px) {
-    .hero-image-mask {
-      mask-image: radial-gradient(ellipse 85% 75% at center, black 25%, transparent 75%), linear-gradient(to right, transparent, black 15%, black 85%, transparent), linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-      mask-composite: intersect;
-      -webkit-mask-image: radial-gradient(ellipse 85% 75% at center, black 25%, transparent 75%), linear-gradient(to right, transparent, black 15%, black 85%, transparent), linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-      -webkit-mask-composite: source-in;
-    }
+    mask-image: linear-gradient(to right, transparent, black 25%, black 75%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 25%, black 75%, transparent);
   }
 </style>
 
