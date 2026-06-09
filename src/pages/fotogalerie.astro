@@ -17,10 +17,9 @@ const description = 'Podívejte se na naše akce — firemní večírky, svatebn
   <section class="py-20 bg-white">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
 
-      <!-- Placeholder galerie — obrázky doplníte -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" id="gallery">
         {Array.from({ length: 21 }).map((_, i) => (
-          <div class="aspect-square bg-stone-100 rounded-xl overflow-hidden">
+          <div class="aspect-square bg-stone-100 rounded-xl overflow-hidden cursor-pointer" data-index={i}>
             <img
               src={`/images/galerie/foto-${i + 1}.webp`}
               alt={`Galerie ${i + 1}`}
@@ -36,4 +35,150 @@ const description = 'Podívejte se na naše akce — firemní večírky, svatebn
     </div>
   </section>
 
+  <!-- Lightbox -->
+  <div id="lightbox" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-sm">
+    <button id="lb-close" class="absolute top-4 right-4 text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors" aria-label="Zavřít">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <button id="lb-prev" class="absolute left-2 sm:left-6 text-white/80 hover:text-white p-3 rounded-full hover:bg-white/10 transition-colors" aria-label="Předchozí">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </button>
+
+    <div class="flex flex-col items-center max-w-5xl w-full px-16 sm:px-24">
+      <img id="lb-img" src="" alt="" class="max-h-[80vh] max-w-full rounded-xl object-contain shadow-2xl transition-opacity duration-200" />
+      <div class="mt-4 text-white/60 text-sm font-medium" id="lb-counter"></div>
+    </div>
+
+    <button id="lb-next" class="absolute right-2 sm:right-6 text-white/80 hover:text-white p-3 rounded-full hover:bg-white/10 transition-colors" aria-label="Další">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </button>
+
+    <!-- Prezentace -->
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3">
+      <button id="lb-slideshow" class="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-full transition-colors border border-white/20">
+        <svg id="lb-play-icon" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg id="lb-pause-icon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+        <span id="lb-slideshow-label">Prezentace</span>
+      </button>
+    </div>
+  </div>
+
 </Layout>
+
+<script>
+  const gallery = document.getElementById('gallery')!;
+  const lightbox = document.getElementById('lightbox')!;
+  const lbImg = document.getElementById('lb-img') as HTMLImageElement;
+  const lbCounter = document.getElementById('lb-counter')!;
+  const lbClose = document.getElementById('lb-close')!;
+  const lbPrev = document.getElementById('lb-prev')!;
+  const lbNext = document.getElementById('lb-next')!;
+  const lbSlideshow = document.getElementById('lb-slideshow')!;
+  const lbPlayIcon = document.getElementById('lb-play-icon')!;
+  const lbPauseIcon = document.getElementById('lb-pause-icon')!;
+  const lbSlideshowLabel = document.getElementById('lb-slideshow-label')!;
+
+  // Collect visible images
+  const items: { src: string; alt: string }[] = [];
+  gallery.querySelectorAll('[data-index]').forEach((el) => {
+    const img = el.querySelector('img');
+    if (img && !el.classList.contains('hidden')) {
+      items.push({ src: img.src, alt: img.alt });
+    }
+  });
+
+  let current = 0;
+  let slideshowTimer: ReturnType<typeof setInterval> | null = null;
+
+  function open(index: number) {
+    current = index;
+    show();
+    lightbox.classList.remove('hidden');
+    lightbox.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    lightbox.classList.add('hidden');
+    lightbox.classList.remove('flex');
+    document.body.style.overflow = '';
+    stopSlideshow();
+  }
+
+  function show() {
+    lbImg.style.opacity = '0';
+    setTimeout(() => {
+      lbImg.src = items[current].src;
+      lbImg.alt = items[current].alt;
+      lbCounter.textContent = `${current + 1} / ${items.length}`;
+      lbImg.style.opacity = '1';
+    }, 100);
+  }
+
+  function prev() { current = (current - 1 + items.length) % items.length; show(); }
+  function next() { current = (current + 1) % items.length; show(); }
+
+  function startSlideshow() {
+    slideshowTimer = setInterval(next, 3000);
+    lbPlayIcon.classList.add('hidden');
+    lbPauseIcon.classList.remove('hidden');
+    lbSlideshowLabel.textContent = 'Zastavit';
+  }
+
+  function stopSlideshow() {
+    if (slideshowTimer) { clearInterval(slideshowTimer); slideshowTimer = null; }
+    lbPlayIcon.classList.remove('hidden');
+    lbPauseIcon.classList.add('hidden');
+    lbSlideshowLabel.textContent = 'Prezentace';
+  }
+
+  // Open on click
+  gallery.addEventListener('click', (e) => {
+    const tile = (e.target as HTMLElement).closest('[data-index]') as HTMLElement | null;
+    if (!tile) return;
+    // Find position among visible items
+    const src = tile.querySelector('img')?.src;
+    const idx = items.findIndex(it => it.src === src);
+    if (idx >= 0) open(idx);
+  });
+
+  lbClose.addEventListener('click', close);
+  lbPrev.addEventListener('click', (e) => { e.stopPropagation(); prev(); });
+  lbNext.addEventListener('click', (e) => { e.stopPropagation(); next(); });
+  lbSlideshow.addEventListener('click', (e) => {
+    e.stopPropagation();
+    slideshowTimer ? stopSlideshow() : startSlideshow();
+  });
+
+  // Click outside image to close
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) close();
+  });
+
+  // Keyboard
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.classList.contains('hidden')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') prev();
+    if (e.key === 'ArrowRight') next();
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  lightbox.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  lightbox.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
+  });
+</script>
