@@ -7,8 +7,18 @@ const description = 'Podívejte se na naše akce — firemní večírky, svatebn
 
 <Layout title={title} description={description}>
 
-  <section class="pt-20 lg:pt-24 bg-stone-900 text-white">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 lg:py-24">
+  <section class="pt-20 lg:pt-24 relative overflow-hidden bg-stone-900 text-white">
+    <div class="absolute inset-0" aria-hidden="true">
+      <img
+        src="/images/galerie/foto-9.webp"
+        alt=""
+        class="w-full h-full object-cover object-center opacity-50 hero-bg-image"
+        fetchpriority="high"
+      />
+      <div class="absolute inset-0 bg-gradient-to-r from-stone-900 via-stone-900/80 to-stone-900/30"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-stone-900/50 via-transparent to-stone-900/60"></div>
+    </div>
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-16 lg:py-24">
       <h1 class="text-4xl sm:text-5xl font-extrabold mb-4">Fotogalerie</h1>
       <p class="text-stone-200 text-lg max-w-2xl">Nahlédněte do naší práce. Každá akce je pro nás jedinečná a snažíme se, aby jídlo nejen chutnalo, ale i vypadalo skvěle.</p>
     </div>

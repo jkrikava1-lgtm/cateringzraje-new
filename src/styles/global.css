@@ -34,3 +34,9 @@
     line-height: 1.2;
   }
 }
+
+/* Podkresová fotka v hero sekcích podstránek — okraje se rozplývají do tmavého pozadí */
+.hero-bg-image {
+  mask-image: linear-gradient(to right, transparent, black 35%, black 85%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 35%, black 85%, transparent);
+}
